@@ -33,7 +33,7 @@ int currentdir = -100;
 //Activates debug features if not zero.
 //>>Outputs periodically changing PWM values from pin 11.
 //>>Periodically displays latest PWM reading and intended pin 11 direction.
-#define debug 1
+#define debug 2
 #define debugpwmpin 11
 
 //choice controls which of three states it is in
@@ -90,13 +90,23 @@ void loop()
   {
      choice = 0;
   }
-  else if(rotatedir - currentdir > 0 || rotatedir - currentdir < totalsteps / 2)
+  else if(rotatedir - currentdir > 0 && (rotatedir - currentdir) < totalsteps/2 || rotatedir - currentdir < -1*totalsteps / 2)
   { //this is case if it is faster to decrement (go CCW)
-     choice = -1;
+     if(debug>1)
+      {
+        Serial.print("W");
+        Serial.println(rotatedir - currentdir);
+      }
+     choice = 1;
   }
   else
   { //otherwise go CW
-     choice = 1;
+     choice = -1;
+     if(debug>1)
+      {
+        Serial.print("C");
+        Serial.println(rotatedir - currentdir);
+      }
   }
   //retaining old continuous servo code
 
