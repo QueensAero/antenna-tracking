@@ -24,7 +24,7 @@
 #define refuse_min 900
 #define refuse_max 1600
 //number of microsteps on the stepper motor
-#define totalsteps 800
+#define totalsteps 6400
 
 //Directional servo values
 volatile int rotatedir = -1000;//default is -1000 so that it is set later
@@ -86,7 +86,7 @@ void loop()
      currentdir = rotatedir;
      choice = 0;
   }
-  else if(currentdir == rotatedir) //now stop.
+  else if(currentdir == rotatedir || rotatedir == -1000) //now stop.
   {
      choice = 0;
   }
@@ -177,8 +177,17 @@ void loop()
       timer = timer +1;
     }
   }
+    if(debug > 1 && choice != 0)
+    {
+        Serial.print("choice: ");
+        Serial.print(choice);
+        Serial.print(" current ");
+        Serial.print(currentdir);
+        Serial.print(" goal ");
+        Serial.println(rotatedir);
+    }
   //end of debug section
-  if(currentdir != 100 && choice != 0) //update currentdir if needed
+  if(currentdir != -100 && choice != 0) //update currentdir if needed
   {
     currentdir = (currentdir + totalsteps + choice) % totalsteps;
   }
